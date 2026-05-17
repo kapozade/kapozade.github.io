@@ -1,173 +1,395 @@
-@import url(https://fonts.googleapis.com/css?family=Hind:300,500);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,400italic);
+@import url(https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap);
 
+/* ─── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+:root {
+    --bg:        #0d0f14;
+    --surface:   #13161d;
+    --border:    rgba(255, 255, 255, 0.07);
+    --accent:    #00e5a0;
+    --accent2:   #7b61ff;
+    --text:      #f0f0f0;
+    --muted:     #6b7280;
+    --mono:      'Space Mono', monospace;
+    --sans:      'Syne', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow: hidden;
+}
+
+/* ─── Preloader ─────────────────────────────────────────────── */
 #preloader {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #1a1b23;
-    z-index: 10000;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+#preloader.hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .loader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 30px;
-    height: 30px;
-    -webkit-transform: translate(-50%, -50%) rotate(45deg) translate3d(0, 0, 0);
-    -moz-transform: translate(-50%, -50%) rotate(45deg) translate3d(0, 0, 0);
-    -ms-transform: translate(-50%, -50%) rotate(45deg) translate3d(0, 0, 0);
-    -o-transform: translate(-50%, -50%) rotate(45deg) translate3d(0, 0, 0);
-    transform: translate(-50%, -50%) rotate(45deg) translate3d(0, 0, 0);
-    -webkit-animation: loader 1.2s infinite ease-in-out;
-    animation: loader 1.2s infinite ease-in-out;
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
 }
 
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    color: #343333;
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
-html,
-body,
-textarea,
-button,
-input {
-    font-family: 'Open Sans', sans-serif;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'Hind', sans-serif;
-}
-
-p {
-    font-size: 14px;
-    line-height: 1.42;
-}
-
-h1 {
-    font-size: 63px;
-    font-weight: 500;
-}
-
-h2 {
-    font-size: 36px;
-    font-weight: 500;
-}
-
-h2.small-heading {
-    padding: 60px 0 20px 0;
-    text-align: center;
-}
-
-h3 {
-    font-size: 18px;
-    font-weight: 500;
-}
-
-body {
-    overflow-x: hidden;
-}
-
+/* ─── Background ────────────────────────────────────────────── */
 .home-page {
-    width: 100vw;
+    position: relative;
     height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 2000;
 }
 
 .introduction {
-    float: left;
-    padding: 0;
-    overflow: hidden;
     position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.introduction img {
+/* Background image */
+.introduction > img {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.25) saturate(0.4);
+    z-index: 0;
+}
+
+/* Grid overlay */
+.introduction::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0, 229, 160, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 160, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    z-index: 1;
 }
 
 .mask {
-    width: 100%;
-    height: 100%;
-    opacity: 0.85;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: #1a1b23;
+    display: none;
 }
 
+/* Ambient glow orbs */
+.glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.glow-orb.g1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 229, 160, 0.12) 0%, transparent 70%);
+    top: -150px;
+    left: -150px;
+}
+
+.glow-orb.g2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(123, 97, 255, 0.12) 0%, transparent 70%);
+    bottom: -100px;
+    right: -100px;
+}
+
+/* ─── Content Card ──────────────────────────────────────────── */
 .intro-content {
     position: relative;
-    z-index: 10;
-    top: 50%;
-    opacity: 0.9;
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-    transform: translateY(-50%);
+    z-index: 2;
+    top: 0;
+    background: rgba(19, 22, 29, 0.20);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 3rem 3.5rem;
+    max-width: 560px;
+    width: 90%;
+    animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.2s;
 }
 
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Terminal tag */
+.intro-content::before {
+    content: '> grep -w onurkapcik onWeb';
+    display: block;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    background: rgba(0, 229, 160, 0.08);
+    border: 1px solid rgba(0, 229, 160, 0.2);
+    border-radius: 6px;
+    padding: 5px 12px;
+    margin-bottom: 1.75rem;
+    animation: fadeUp 0.9s 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Heading ───────────────────────────────────────────────── */
 .intro-content h1 {
-    color: #fff;
-    text-align: center;
+    font-family: var(--sans);
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    text-shadow: none;
+    animation: fadeUp 0.9s 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.intro-content h1 span
-{
-    color: #6A8D9D;
+.intro-content h1 span {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
+/* ─── Subtitle ──────────────────────────────────────────────── */
 .intro-content h2 {
-    color: #fff;
-    text-decoration: underline;
-    text-align: center;
-    font-weight: 300;
-    font-size: 30px;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    border: none;
+    letter-spacing: 0.02em;
+    animation: fadeUp 0.9s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* ─── Divider ───────────────────────────────────────────────── */
+.intro-content h2::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: var(--border);
+    margin-top: 1.75rem;
+}
+
+/* ─── Social Links ──────────────────────────────────────────── */
 .social-media {
-    font-size: 25px;
-    text-align: center;
-    margin-top: 50px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 0;
+    animation: fadeUp 0.9s 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .social-media a {
-    color: #fff;
-    text-decoration: none;
-    outline: 0 none;
-    padding: 0 10px;
-}
-
-.social-media a + .tooltip > .tooltip-inner {
-    background-color: transparent;
-    color: #6A8D9D;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted) !important;
     font-size: 16px;
-}
-.social-media a + .tooltip > .tooltip-arrow {
-    border-bottom-color: transparent;
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
 }
 
 .social-media a:hover {
-    color: #6A8D9D;
+    color: var(--accent) !important;
+    border-color: rgba(0, 229, 160, 0.4);
+    background: rgba(0, 229, 160, 0.06);
+    transform: translateY(-3px);
+}
+
+/* Resume button */
+.social-media a#resume-link {
+    width: auto;
+    padding: 0 16px;
+    gap: 8px;
+    color: var(--accent) !important;
+    border-color: rgba(0, 229, 160, 0.3);
+    background: rgba(0, 229, 160, 0.06);
+    font-family: var(--mono);
+    font-size: 12px;
+}
+
+.social-media a#resume-link::after {
+    content: 'Resume ↗';
+    font-family: var(--mono);
+    font-size: 12px;
+}
+
+.social-media a#resume-link:hover {
+    background: rgba(0, 229, 160, 0.12);
+    border-color: rgba(0, 229, 160, 0.5);
+    transform: translateY(-3px);
+}
+
+/* ─── Status line ───────────────────────────────────────────── */
+.status-line {
+    margin-top: 1.75rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: fadeUp 0.9s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.25; }
+}
+
+.status-dot--company {
+    background: var(--accent2);
+    animation: pulse 2s infinite;
+}
+
+/* ─── Pödüfü Easter Egg ─────────────────────────────────────── */
+#poduf-egg {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(16px) scale(0.9);
+    z-index: 99999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#poduf-egg.poduf-egg--visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.poduf-egg__badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: rgba(10, 10, 10, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 0 32px rgba(255, 255, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.poduf-egg__text {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #ffffff;
+    letter-spacing: 0.05em;
+}
+
+.poduf-egg__devil {
+    font-size: 1.5rem;
+}
+
+/* ─── Fenerbahçe Easter Egg ─────────────────────────────────── */
+#fener-egg {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(16px) scale(0.9);
+    z-index: 99999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#fener-egg.fener-egg--visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.fener-egg__badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: rgba(15, 52, 96, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(247, 201, 0, 0.5);
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 0 32px rgba(247, 201, 0, 0.25), 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.fener-egg__logo {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(247, 201, 0, 0.6));
+}
+
+.fener-egg__name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #f7c900;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 12px rgba(247, 201, 0, 0.6);
+}
+
+
+/* ─── Responsive ────────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .intro-content {
+        padding: 2rem 1.75rem;
+    }
+
+    .intro-content h1 {
+        font-size: 2rem;
+    }
 }
