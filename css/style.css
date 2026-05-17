@@ -292,6 +292,17 @@ html, body {
     animation: pulse 2s infinite;
 }
 
+/* ─── iOS motion permission button (hidden) ─────────────────── */
+#ios-motion-btn {
+    position: fixed;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+    border: none;
+    padding: 0;
+}
+
 /* ─── Pödüfü Easter Egg ─────────────────────────────────────── */
 #poduf-egg {
     position: fixed;

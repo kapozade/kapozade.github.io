@@ -136,19 +136,23 @@
             }, 3000);
         }
 
-        // Desktop: type "fener"
+        // Desktop: type "fener" or "podufu"
         let buffer = '';
         document.addEventListener('keydown', function (e) {
-            buffer = (buffer + e.key).toLowerCase().slice(-5);
-            if (buffer === 'fener') {
+            buffer = (buffer + e.key).toLowerCase().slice(-6);
+            if (buffer.slice(-5) === 'fener') {
                 buffer = '';
                 showFener();
+            } else if (buffer.slice(-6) === 'podufu') {
+                buffer = '';
+                showPodufu();
             }
         });
 
         // Mobile: shake gesture → Pödüfü egg
         var lastX, lastY, lastZ;
-        var THRESHOLD = 15;
+        var THRESHOLD = 12;
+        var shakeCooldown = false;
 
         function startShakeListener() {
             window.addEventListener('devicemotion', function (e) {
@@ -156,18 +160,31 @@
                 if (!acc) return;
                 if (lastX == null) { lastX = acc.x; lastY = acc.y; lastZ = acc.z; return; }
                 var delta = Math.abs(acc.x - lastX) + Math.abs(acc.y - lastY) + Math.abs(acc.z - lastZ);
-                if (delta > THRESHOLD) showPodufu();
+                if (delta > THRESHOLD && !shakeCooldown) {
+                    shakeCooldown = true;
+                    showPodufu();
+                    setTimeout(function () { shakeCooldown = false; }, 2000);
+                }
                 lastX = acc.x; lastY = acc.y; lastZ = acc.z;
             });
         }
 
         if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-            // iOS 13+ — request permission on first tap
-            document.addEventListener('touchend', function requestMotion() {
+            // iOS 13+ requires permission from a direct user gesture (button tap)
+            var iosBtn = document.createElement('button');
+            iosBtn.id = 'ios-motion-btn';
+            iosBtn.setAttribute('aria-hidden', 'true');
+            document.body.appendChild(iosBtn);
+            iosBtn.addEventListener('click', function () {
                 DeviceMotionEvent.requestPermission().then(function (state) {
                     if (state === 'granted') startShakeListener();
                 }).catch(function () {});
-                document.removeEventListener('touchend', requestMotion);
+                iosBtn.remove();
+            });
+            // Trigger on first tap anywhere — delegates to the hidden button
+            document.addEventListener('touchend', function grantMotion() {
+                iosBtn.click();
+                document.removeEventListener('touchend', grantMotion);
             }, { once: true });
         } else {
             startShakeListener();
