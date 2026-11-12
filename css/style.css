@@ -60,7 +60,8 @@ html, body {
 /* ─── Background ────────────────────────────────────────────── */
 .home-page {
     position: relative;
-    height: 100vh;
+    height: 100vh; /* fallback for older browsers */
+    height: 100dvh; /* visible viewport on mobile (excludes browser toolbars) */
     display: flex;
     align-items: center;
     justify-content: center;
